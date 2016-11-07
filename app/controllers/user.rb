@@ -8,7 +8,7 @@ post '/user/reg' do
     return erb :error , layout: false
   end
 end
-
+#==
 post '/user/ini' do
   @user = User.authenticate(params[:email],params[:password])
   if @user
