@@ -3,7 +3,9 @@ include BCrypt
 class User < ActiveRecord::Base
   validates :email, :presence => true, :uniqueness => true
   validates :name, :presence => true
-
+  has_many :authored_surveys, class_name: "Survey"
+  has_many :taken_surveys, through: :participations, source: :survey 
+  has_many :participations
   def password
     @password ||= Password.new(password_digest)
   end
