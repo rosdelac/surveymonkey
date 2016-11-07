@@ -1,0 +1,12 @@
+<% if @title %>
+  <h2><%= @title %></h2>
+  <form id='frm_survey'>
+    <div class="form-group">
+      <label for="comment">Question:</label>
+      <textarea class="form-control" rows="2" id="comment" name='question'  placeholder=" of survey..."></textarea>
+      <button type="button" class="btn btn-default btn-sm" id='btn_question' data-toggle="modal" data-target="#myModal">
+    <span class="glyphicon glyphicon-send"></span> Commit question 
+    </button>
+    </div>
+  </form>
+<% end  %>

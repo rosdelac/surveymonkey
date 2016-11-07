@@ -5,7 +5,7 @@ $(document).ready(function() {
 	$('#registerform').hide();
   $('#loginform').hide();
 //==============================================================================
-//Botones
+//Botones de inicio y registro
 //==============================================================================
   $('#registerbutton').click(function(event) {
     event.preventDefault();
@@ -37,8 +37,27 @@ $(document).ready(function() {
     });
   });
 //==============================================================================  
+//Make the survey
 //==============================================================================  
+  $('body').on('click','#btn_title',function(event) {
+      event.preventDefault();
+      var cadena = $(this).parent().parent().serialize();
+      console.log(cadena);
+       $.post('/make/survey/title',cadena,function(data)
+      {       
+        $("#survey_panel").html(data);
+       });
+    });
 //==============================================================================  
+  $('body').on('click','#btn_question',function(event) {
+      event.preventDefault();
+      var cadena = $(this).parent().parent().serialize();
+      console.log(cadena);
+      // $.post('/user/ini',cadena,function(data)
+      // {       
+      //   $("#principal").html(data);
+      // });
+    });
 //==============================================================================  
 //==============================================================================  
 
