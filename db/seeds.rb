@@ -26,7 +26,8 @@ module Seeds
   end
   def self.option
     Option.transaction do
-      a1 = Option.create(question_id:1,option: "respuesta1")
+      a1 = Option.create(question_id:1,option: "respuesta1preg1")
+      a1b = Option.create(question_id:1,option: "respuesta2preg1")
       a2 = Option.create(question_id:2,option: "respuesta2")
     end    
   end
@@ -45,7 +46,7 @@ module Seeds
   def self.relation
     Relation.transaction do
       re1 = Relation.create(option_id:1,response_id:1)
-      re2= Relation.create(option_id:1,response_id:2)
+      re2 = Relation.create(option_id:1,response_id:2)
     end    
   end
 end
