@@ -23,7 +23,7 @@ post '/user/ini' do
   end
 end
 #==============================================================================
-post '/user/logout' do 
+get '/user/logout' do 
   session.clear
   redirect '/'
 end
