@@ -1,36 +1,41 @@
 #===============================
 #== Controlador de encuestras ==
 #===============================
-post '/make/survey/title' do
-  @survey = Survey.create(title:params[:title],user_id: session[:user_id])
-  if @survey  
-    erb :survey, layout: false
+get '/surveys/all' do
+  if session[:user_id]
+    @user = User.find(session[:user_id])
+    @surveys = Survey.all
+    erb :surveys, layout: true
   else
     erb :error, layout: false
   end
 end
-
-post '/make/survey/question' do
-  @survey = Survey.last
-  @question = Question.create(survey_id: @survey.id,question:params[:question])
-  if @question  
-    erb :survey, layout: false
+#==============================================================================
+get '/surveys/:survey_id' do
+  if session[:user_id]
+    @user = User.find(session[:user_id])
+    @survey = Survey.find(params[:survey_id])
+    erb :survey, layout: true
   else
     erb :error, layout: false
   end
 end
-post '/make/survey/option' do
-  @survey = Survey.last
-  @question = @survey.questions.last
-  option = Option.create(question_id:@question.id,option: params[:option])
-  if option 
-    @options = @question.options
-    erb :survey, layout: false
-  else
-    erb :error, layout: false
+#==============================================================================
+post '/survey/submit' do
+  p "*" * 50
+  p params
+  p params.count
+  p "*" * 50
+  @user = User.find(session[:user_id])
+  @survey = Survey.find(params[:survey])
+  @participation = Participation.create(user_id: @user.id,survey_id: @survey.id)
+  response = Response.create(participation_id: @participation.id)
+  params[:question].each do |x,y|
+    Relation.create(option_id: y,response_id: response.id)
   end
+  "you submitted the form thanks"
 end
-
+#==============================================================================
 post '/make/survey/' do 
   p survey = Survey.create(title:params[:title],user_id: session[:user_id])
   resp = "Success"
