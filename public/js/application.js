@@ -4,11 +4,13 @@ $(document).ready(function() {
 //==========================================================
 	$('#registerform').hide();
   $('#loginform').hide();
+  make_principal();
+  var final_resp = {title: "",questions: [],options: []}
   var title = "";
-  var questions = [];
+  var question = "";
   var options = [];
   var count = 0;
-  var panels = 0;
+  var active_panel = 0;
 //==============================================================================
 //Botones de inicio y registro
 //==============================================================================
@@ -28,8 +30,9 @@ $(document).ready(function() {
     event.preventDefault();
     var cadena = $(this).parent().parent().parent().serialize();
     $.post('/user/reg',cadena,function(data)
-    {       
+    {  
       $("#principal").html(data);
+      make_principal();
     });
   });
 //==============================================================================  
@@ -37,83 +40,134 @@ $(document).ready(function() {
     event.preventDefault();
     var cadena = $(this).parent().parent().parent().serialize();
     $.post('/user/ini',cadena,function(data)
-    {       
+    { 
       $("#principal").html(data);
+      make_principal();
     });
   });
 //==============================================================================  
 //Make the survey
 //==============================================================================  
   $('body').on('click','#btn_title',function(event) {
-      event.preventDefault();
+    event.preventDefault();
       title = $('#comment').val();
-      make_survey();
-      panels = panels + 1;
-      make_panel();
-      make_panel_elements();
+      final_resp.title = title;
+      active_panel = 1;
+      make_survey_title();
+      make_survey_panel();
+      make_panel_question_elements();
+  });
+  //==============================================================================  
+  $('body').on('click','#btn_cancel',function(event) {
+    event.preventDefault();
+    rest();
+    make_principal();
   });
 //==============================================================================  
   $('body').on('click','#btn_question',function(event) {
       event.preventDefault();
-      questions.push($('#comment').val());
-      questions.push($('#comment').val());
-      make_question(questions.pop());
+      question = ($('#comment').val());
+      make_question(question);
     });
 //==============================================================================  
   $('body').on('click','#btn_option',function(event) {
       event.preventDefault();
-      count = count + 1; 
       options.push($('#comment').val());
       options.push($('#comment').val());
       $('#comment').val("");
       make_option(options.pop());
     });
-  //==============================================================================  
+//==============================================================================  
   $('body').on('click','#btn_end_question',function(event) {
       event.preventDefault();
-      panels = panels + 1;
-      make_panel();
-      make_panel_elements();
+      if (count < 3) {
+        alert("You need 3 options!")
+      }else{
+        make_question_definitive();
+      }
+  });
+  //==============================================================================  
+  $('body').on('click','#btn_finish',function(event) {
+      event.preventDefault();
+      if (final_resp.questions.length < 1) {
+        alert("You need at least 1 question!")
+      }else{
+        var cadena = final_resp;
+        console.log(cadena);
+        $.post('/make/survey/',cadena,function(data)
+      {       
+        alert(data)
+        
+       });
+      }
       
-    });
-//==============================================================================  
-  function make_survey() {
-    $('#survey_panel').html("<h2 class='text-center'>" + title + "</h2>");
-  };
-  function make_panel() {
-    $('#survey_panel').append('<div class="panel panel-default" id="panel_'+panels+'">');
-    $('#survey_panel').append('</div>');
-  }
-  function make_panel_elements() {
-    $('#panel_'+panels+'').append('<div class="panel-body">');
-    $('#panel_'+panels+'').append("<form id='frm_survey'>");
-    $('#panel_'+panels+'').append("<div class='form-group'>");
-    $('#panel_'+panels+'').append("<textarea class='form-control' rows='2' id='comment' placeholder='Question...'></textarea>");
-    $('#panel_'+panels+'').append("<button type='button' class='btn btn-default btn-sm' id='btn_question'><span class='glyphicon glyphicon-ok'></span> Commit question</button>");
-    $('#panel_'+panels+'').append("</div>");
-    $('#panel_'+panels+'').append("</form>");
-    $('#panel_'+panels+'').append('</div>');
-  }
-  function make_question(question) {
-    $('#panel_'+panels+'').html('<div class="panel-body">');
-    $('#panel_'+panels+'').append('<h3> '+question+ '</h3>');
-    $('#panel_'+panels+'').append("<form id='frm_survey'>");
-    $('#panel_'+panels+'').append("<div class='form-group' id='div_option_"+panels+"'>");
-    $('#panel_'+panels+'').append("<textarea class='form-control' rows='2' id='comment' placeholder='Option...'></textarea>");
-    $('#panel_'+panels+'').append("<button type='button' class='btn btn-default btn-sm' id='btn_option'><span class='glyphicon glyphicon-ok'></span> Commit option</button>");
-    $('#panel_'+panels+'').append('<button type="button" class="btn pull-right btn-sm" id="btn_end_question"><span class="glyphicon glyphicon-send"></span> End question </button>');
-    $('#panel_'+panels+'').append("</div>");
-    $('#panel_'+panels+'').append("</form>");
-    $('#panel_'+panels+'').append('</div>');
+  });
 
+//==============================================================================  
+  function make_survey_title() {
+    $('#survey_panel').html('<button type="button" id="btn_cancel" class="btn pull-right btn-danger btn-sm">Cancel</button>');
+    $('#survey_panel').append("<h2 class='text-center'>" + title + "</h2>");
+    $('#survey_panel').append("<div id='the_div'></div>")
+    $('#survey_panel').append('<button type="button" id="btn_finish" class="btn pull-right btn-success btn-sm">Summit Survey</button>');
+  };
+//==============================================================================   
+  function make_survey_panel() {
+    $('#the_div').append('<div class="panel panel-default" id="panel_'+active_panel+'"></div>');
+  };
+//============================================================================== 
+  function make_question_definitive() {
+    $('#panel_'+active_panel+'').html('<h3> '+question+ '</h3>');
+    $('#panel_'+active_panel+'').append('<p>1. '+options[0]+'</p>');
+    $('#panel_'+active_panel+'').append('<p>2. '+options[1]+'</p>');
+    $('#panel_'+active_panel+'').append('<p>3. '+options[2]+'</p>');
+    final_resp.questions.push(question);
+    final_resp.options.push(options);
+    options = [];
+    count = 0;
+    active_panel = active_panel + 1;
+    make_survey_panel();
+    make_panel_question_elements();
   }
+//============================================================================== 
+  function make_panel_question_elements() {
+    $('#panel_'+active_panel+'').html('<label for="comment">Question:</label>');
+    $('#panel_'+active_panel+'').append("<textarea class='form-control' rows='2' id='comment' placeholder='Question...'></textarea>");
+    $('#panel_'+active_panel+'').append("<button type='button' class='btn btn-default btn-sm' id='btn_question'><span class='glyphicon glyphicon-ok'></span> Commit question</button>");
+  };
+//==============================================================================   
+  function make_question(question) {
+    $('#panel_'+active_panel+'').html('<h3> '+question+ '</h3>');
+    $('#panel_'+active_panel+'').append("<div id='div_option_"+active_panel+"'></div>");
+    $('#panel_'+active_panel+'').append("<textarea class='form-control' rows='2' id='comment' placeholder='Option...'></textarea>");
+    $('#panel_'+active_panel+'').append("<button type='button' class='btn btn-default btn-sm' id='btn_option'><span class='glyphicon glyphicon-ok'></span> Commit option</button>");
+    $('#panel_'+active_panel+'').append('<button type="button" class="btn pull-right btn-sm" id="btn_end_question"><span class="glyphicon glyphicon-send"></span> End question </button>');
+  }
+//============================================================================== 
   function make_option(option) {
-    $('#div_option_'+panels+'').append('<p>'+count+'. '+option+'</p>');
+    count = count + 1;
+    if (count<4) {
+      $('#div_option_'+active_panel+'').append('<p>'+count+'. '+option+'</p>');
+    };
   }
-  
-    // <div class="panel-heading">Panel Heading</div>
-    // 
-    // <div class="panel-footer">Panel Footer</div>
+//============================================================================== 
+  function rest() {
+  final_resp = {title: "",questions: [],options: []}
+  title = "";
+  question = "";
+  options = [];
+  count = 0;
+  active_panel = 0;
+  }
+//==============================================================================  
+  function make_principal() {
+    $('#survey_panel').html('<h2>Create your survey</h2>');
+    $('#survey_panel').append('<p>Type the title and start creating it.</p>');
+    $('#survey_panel').append('<label for="comment">Title:</label>');
+    $('#survey_panel').append('<textarea class="form-control" rows="2" id="comment"  placeholder="Title of survey..."></textarea>');
+    $('#survey_panel').append("<button type='button' class='btn btn-default btn-sm' id='btn_title'><span class='glyphicon glyphicon-send'></span>Create Survey</button");
+  };
+
+
   
 
 });
