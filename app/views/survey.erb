@@ -40,18 +40,22 @@
 </nav>
 <!-- Nav bar end-->
 <!-- surveys begin -->
+<div class="container text-left">
+<div class="row">
 <div id="onesurvey">
   <h2><%= @survey.title %></h2>
   <form action="/survey/submit" method="post">
     <% @survey.questions.each_with_index do |question,index| %>
       <br><h3><%= question.question %></h3>
       <% question.options.each_with_index do |option,index2| %>
-        <input type="radio" name="question[<%= question.id %>]" value="<%= option.id %>" id="<%= index %><%= index2 %>"><label for="<%= index %><%= index2 %>"> <%= option.option %></label><br>
+        <input type="radio" name="question[<%= question.id %>]" value="<%= option.id %>" id="<%= index %><%= index2 %>" required><label for="<%= index %><%= index2 %>"> <%= option.option %></label><br>
         <input type="hidden" name="survey" value="<%= @survey.id %>">
       <% end  %>
     <% end  %>
     <br><br><button type="submit" class="btn btn-success">Submit</button>
   </form>
+</div>
+</div>
 </div>
 <!-- surveys end-->
 

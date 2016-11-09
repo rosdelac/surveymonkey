@@ -43,7 +43,7 @@ post '/survey/submit' do
   params[:question].each do |x,y|
     Relation.create(option_id: y,response_id: response.id)
   end
-  "you submitted the form thanks"
+  erb :mainpage, layout: true
 end
 #==============================================================================
 post '/make/survey/' do 
