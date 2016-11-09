@@ -135,9 +135,9 @@ $(document).ready(function() {
 //============================================================================== 
   function make_question_definitive() {
     $('#panel_'+active_panel+'').html('<h3> '+question+ '</h3>');
-    $('#panel_'+active_panel+'').append('<p>1. '+options[0]+'</p>');
-    $('#panel_'+active_panel+'').append('<p>2. '+options[1]+'</p>');
-    $('#panel_'+active_panel+'').append('<p>3. '+options[2]+'</p>');
+    for ( var i = 0, l = options.length; i < l; i++ ) {
+      $('#panel_'+active_panel+'').append('<p>'+(i+1)+'. '+options[i]+'</p>');
+    }
     final_resp.questions.push(question);
     final_resp.options.push(options);
     options = [];
