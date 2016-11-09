@@ -21,6 +21,16 @@ get '/surveys/:survey_id' do
   end
 end
 #==============================================================================
+get '/survey/stats/:survey_id' do
+  if session[:user_id]
+    @user = User.find(session[:user_id])
+    @survey = Survey.find(params[:survey_id])
+    erb :stats, layout: true
+  else
+    erb :error, layout: false
+  end
+end
+#==============================================================================
 post '/survey/submit' do
   p "*" * 50
   p params
