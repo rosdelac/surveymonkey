@@ -57,6 +57,8 @@ $(document).ready(function() {
       make_survey_title();
       make_survey_panel();
       make_panel_question_elements();
+      $('#authoredsurveys').slideUp();
+      $('#takensurveys').slideUp();
     }else{
       alert("You need a title")
     }
@@ -66,6 +68,8 @@ $(document).ready(function() {
     event.preventDefault();
     rest();
     make_principal();
+    $('#authoredsurveys').slideDown();
+      $('#takensurveys').slideDown();
   });
 //==============================================================================  
   $('body').on('click','#btn_question',function(event) {
