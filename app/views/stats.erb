@@ -11,9 +11,8 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Home</a></li>
-        <li><a href="/surveys/all">Surveys</a></li>
-      
+        <li><a href="/">Home</a></li>
+        <li class="active"><a href="/surveys/all">Surveys</a></li>
       </ul>
       <form class="navbar-form navbar-right" role="search">
         <div class="form-group input-group">
@@ -40,63 +39,23 @@
   </div>
 </nav>
 <!-- Nav bar end-->
-<!-- Contenido -->  
-<div class="container text-center">
-  <div class="row">
-  <!-- Center start -->
-    <div class="col-sm-12">
-          <div class="panel panel-default text-left">
-            <div class="panel-body" id='survey_panel'>
 
-            <!-- Se carga la figura desde Jquery -->
-            </div>
+<!-- surveys begin -->
+<div id="onesurvey">
+  <h2><%= @survey.title %></h2>
+  <form action="/survey/submit" method="post">
+    <% @survey.questions.each_with_index do |question,index| %>
+      <br><h3><%= question.question %></h3>
+      <% question.options.each_with_index do |option,index2| %>
+       <p> <%= option.option %></p>
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:<%= option.percentage_selected(@survey.taken_times) %>%">
+          <%= option.percentage_selected(@survey.taken_times) %>%
           </div>
-
-<div id="authoredsurveys">
-  <h2>Authored Surveys</h2>
-  <table class="table text-left">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Title</th>
-        <th>URL</th>
-        <th>Stats</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% if @user.authored_surveys %>
-       <% @user.authored_surveys.each_with_index do |survey,index|  %>
-        <tr>
-          <th scope="row"><%= index + 1 %></th>
-          <td><a href="/survey/stats/<%= survey.id %>"><%= survey.title %></a></td>
-        </tr>
-       <% end  %>
+        </div>
       <% end  %>
-    </tbody>
-  </table>
+    <% end  %>
+    <br><br><button type="submit" class="btn btn-success">Submit</button>
+  </form>
 </div>
-<div id="takensurveys">
-<br><br><h2>Taken Surveys</h2>
-  <table class="table text-left">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Title</th>      
-      </tr>
-    </thead>
-    <tbody>
-      <% if @user.taken_surveys %>
-       <% @user.taken_surveys.each_with_index do |survey,index|  %>
-        <tr>
-          <th scope="row"><%= index + 1 %></th>
-          <td><%= survey.title %></td>
-        </tr>
-       <% end  %>
-      <% end  %>
-    </tbody>
-  </table>
-</div>
-          
-    </div>
-  </div>
-</div>
+<!-- surveys end-->
