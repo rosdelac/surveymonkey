@@ -41,21 +41,28 @@
 <!-- Nav bar end-->
 
 <!-- surveys begin -->
-<div id="onesurvey">
-  <h2><%= @survey.title %></h2>
-  <form action="/survey/submit" method="post">
-    <% @survey.questions.each_with_index do |question,index| %>
-      <br><h3><%= question.question %></h3>
-      <% question.options.each_with_index do |option,index2| %>
-       <p> <%= option.option %></p>
-        <div class="progress">
-          <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:<%= option.percentage_selected(@survey.taken_times) %>%">
-          <%= option.percentage_selected(@survey.taken_times) %>%
-          </div>
-        </div>
-      <% end  %>
-    <% end  %>
-    <br><br><button type="submit" class="btn btn-success">Submit</button>
-  </form>
+<div class="container text-left">
+  <div class="row">
+    <div  id="one_stat">
+      <h2><%= @survey.title %></h2>
+      
+        <% @survey.questions.each_with_index do |question,index| %>
+          <br><h3><%= question.question %></h3>
+          <% question.options.each_with_index do |option,index2| %>
+           <p> <%= option.option %></p>
+            <div class="row">
+              <div class="progress col-sm-3 ">
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:<%= option.percentage_selected(@survey.taken_times) %>%">
+                <%= option.percentage_selected(@survey.taken_times) %>%
+                </div>
+              </div>
+            </div>
+          <% end  %>
+        <% end  %>
+        
+      
+    </div>
+  </div>
 </div>
+
 <!-- surveys end-->

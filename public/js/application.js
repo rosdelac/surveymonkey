@@ -50,7 +50,8 @@ $(document).ready(function() {
 //==============================================================================  
   $('body').on('click','#btn_title',function(event) {
     event.preventDefault();
-      title = $('#comment').val();
+    title = $('#comment').val();
+    if (title != "") {
       final_resp.title = title;
       active_panel = 1;
       make_survey_title();
@@ -58,6 +59,9 @@ $(document).ready(function() {
       make_panel_question_elements();
       $('#authoredsurveys').slideUp();
       $('#takensurveys').slideUp();
+    }else{
+      alert("You need a title")
+    }
   });
   //==============================================================================  
   $('body').on('click','#btn_cancel',function(event) {
@@ -71,21 +75,30 @@ $(document).ready(function() {
   $('body').on('click','#btn_question',function(event) {
       event.preventDefault();
       question = ($('#comment').val());
-      make_question(question);
+      if (question != "") {
+        make_question(question);
+      }else{
+        alert("You need a question");
+      }
     });
 //==============================================================================  
   $('body').on('click','#btn_option',function(event) {
       event.preventDefault();
-      options.push($('#comment').val());
-      options.push($('#comment').val());
-      $('#comment').val("");
-      make_option(options.pop());
+      var option = $('#comment').val()
+      if (option != "") {
+        options.push(option);
+        options.push(option);
+        $('#comment').val("");
+        make_option(options.pop());
+      }else{
+        alert("You need a option")
+      };
     });
 //==============================================================================  
   $('body').on('click','#btn_end_question',function(event) {
       event.preventDefault();
       if (count < 3) {
-        alert("You need 3 options!")
+        alert("You need at least 3 options!")
       }else{
         make_question_definitive();
       }
@@ -150,9 +163,7 @@ $(document).ready(function() {
 //============================================================================== 
   function make_option(option) {
     count = count + 1;
-    if (count<4) {
-      $('#div_option_'+active_panel+'').append('<p>'+count+'. '+option+'</p>');
-    };
+    $('#div_option_'+active_panel+'').append('<p>'+count+'. '+option+'</p>');
   }
 //============================================================================== 
   function rest() {
