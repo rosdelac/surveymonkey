@@ -29,6 +29,7 @@ post '/make/survey/option' do
   else
     erb :error, layout: false
   end
+  erb :mainpage, layout: true
 end
 
 post '/make/survey/' do 
